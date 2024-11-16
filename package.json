@@ -1,0 +1,17 @@
+{
+  "name": "bloxverse-server",
+  "version": "1.0.0",
+  "main": "./dist/src/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "typescript": "^5.6.3"
+  }
+}
