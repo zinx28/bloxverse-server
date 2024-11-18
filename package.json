@@ -9,9 +9,20 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/node": "^22.9.0",
     "typescript": "^5.6.3"
   },
   "dependencies": {
-    "typescript": "^5.6.3"
+    "axios": "^1.7.7",
+    "isolated-vm": "^5.0.1",
+    "typescript": "^5.6.3",
+    "vm2": "^3.9.19"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zinx28/bloxverse-server.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   }
 }

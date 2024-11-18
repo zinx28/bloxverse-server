@@ -1,12 +1,10 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
-    "module": "esnext",
+    "outDir": "./dist/src",
+    "module": "commonjs",
     "target": "esnext",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "strict": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "hono/jsx"
+    "strict": true
   }
 }
