@@ -6,6 +6,7 @@ import loadScripts from "../Utils/loadScripts";
 import loadMap from "../Utils/loadMap";
 import { Vector3 } from "./Unity/Vector3";
 import { Color } from "./Unity/Color";
+import PacketBuilder from "../PacketHandler/PacketBuilder";
 
 export interface GameBlocks {
   type: string;
@@ -67,7 +68,16 @@ export class Game extends EventEmitter {
 
   async NewPlayer(player: PlayerManager) {
     this.players.push(player);
-    // emit player
+
+    // 1 is AUTH
+    const packet = new PacketBuilder(1)
+    .write("int", player.id)
+    .write("string", player.displayName)
+    .write("int", this.world.blocks.length)
+    
+    .sendToClient(player.socket);
+    
+    this.emit("playerJoin", player);
   }
 }
 

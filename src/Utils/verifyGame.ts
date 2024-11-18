@@ -1,25 +1,49 @@
 import axios from "axios";
 import GameInstance from "../Class/Game";
+import { ClientSocket } from "..";
+import PlayerManager from "../Class/PlayerManager";
 
-export default async function verifyToken(token: string) {
+// Temp data
+export interface UserData {
+  playerID: string;
+  playerDisplayName: string;
+}
+
+export default async function verifyToken(
+  token: string,
+  client: ClientSocket
+): Promise<Partial<UserData> | string> {
   try {
     const response = await axios.post(
       `${GameInstance.serverSettings.ServerApi}/api/v1/verifyToken`,
       {},
       {
         headers: {
-            UsersToken: token,
-            GamesToken: GameInstance.customConfig.host_key,
+          UsersToken: token,
+          GamesToken: GameInstance.customConfig.host_key,
         },
       }
     );
 
     var Json = response.data;
-    if (Json.error) {
-      console.log(Json.error);
+
+    if (typeof Json === "string") {
+      //TODO KICK THE PLAYER
+      return "FAILED TO AUTHORIZE USER";
     }
 
-    return response.data;
+    if (Json.error) {
+      console.log(Json.error);
+
+      return Json.error;
+    } else {
+      const userData: Partial<UserData> = {
+        playerID: Json.userId,
+        playerDisplayName: Json.displayName,
+      };
+
+      return userData;
+    }
   } catch (err: any) {
     if (err.errors) {
       err.errors.forEach((singleError: any) => {
@@ -29,8 +53,6 @@ export default async function verifyToken(token: string) {
       });
     }
 
-    return {
-      error: "Failed To Verify Token... Verify if token is correct / servers are up?",
-    };
+    return "Failed To Verify Token... Verify if token is correct / servers are up?";
   }
 }
