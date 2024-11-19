@@ -32,6 +32,8 @@ export default class PlayerManager extends EventEmitter {
         // userinterface
     }
 
+
+
     SpawnMap(){
         // 3 LOAD MAP
         for (let i = 0; i < GameInstance.world.blocks.length; i++) {

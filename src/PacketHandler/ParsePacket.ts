@@ -1,5 +1,7 @@
 import { ClientSocket, GameInstance } from "..";
 import PlayerManager from "../Class/PlayerManager";
+import { Quaternion } from "../Class/Unity/Quaternion";
+import { Vector3 } from "../Class/Unity/Vector3";
 import verifyToken from "../Utils/verifyGame";
 import PacketBuilder from "./PacketBuilder";
 
@@ -83,7 +85,24 @@ export default async function parsePacket(
       //.build();
 
       break;
+    case 2: // Update Player Pos To Everyone
+        const posX = decompressedData.readFloatLE(0);
+        const posY = decompressedData.readFloatLE(4);
+        const posZ = decompressedData.readFloatLE(8);
+        const rotX = decompressedData.readFloatLE(12);
+        const rotY = decompressedData.readFloatLE(16);
+        const rotZ = decompressedData.readFloatLE(20);
+        const rotW = decompressedData.readFloatLE(24);
 
+        client.User.position = new Vector3(posX, posY, posZ);
+        client.User.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+
+        new PacketBuilder(4) // 4 PlayerMove
+        .write("int", client.User.id)
+        .write("vector3", client.User.position)
+        .write("quaternion", client.User.rotation)
+        .sendToAllClientsExcept([client.User.socket]);
+      break;
     default:
       console.log(`${packetType} is not supported`);
       break;

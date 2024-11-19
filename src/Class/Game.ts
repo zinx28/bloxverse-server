@@ -66,27 +66,44 @@ export class Game extends EventEmitter {
       );
   }
 
+  OtherClients(player: PlayerManager) {
+    this.players.forEach((client) => {
+      if (!client.socket.destroyed && !client.socket.closed) {
+        if (player != client) {
+          new PacketBuilder(2)
+            .write("int", client.id)
+            .write("vector3", client.position)
+            .write("quaternion", client.rotation)
+            .sendToClient(player.socket);
+        }
+      }
+    });
+  }
+
   async NewPlayer(player: PlayerManager) {
     this.players.push(player);
+
+    this.OtherClients(player); // LOAD OTHER PLAYERS ON OTHER SCREENS
 
     player.SpawnMap();
 
     // Spawn Player (ALL CLIENTS)
     new PacketBuilder(2)
-    .write("int", player.id)
-    .write("vector3", player.position)
-    .write("quaternion", player.rotation)
-    // CAMERA TYPE
-    .write("string", player.cameracontroller.cameraType)
-    .sendToClient(player.socket);
-
-    // Spawn Player (ALL CLIENTS) ~ CAMERA STUFF SHOULDNT BE INCLUDED
-      new PacketBuilder(2)
       .write("int", player.id)
       .write("vector3", player.position)
       .write("quaternion", player.rotation)
+      // CAMERA TYPE
+      .write("string", player.cameracontroller.cameraType)
+      .sendToClient(player.socket);
+
+    // Spawn Player (ALL CLIENTS) ~ CAMERA STUFF SHOULDNT BE INCLUDED
+    new PacketBuilder(2)
+      .write("int", player.id)
+      //.write("string", player.displayName)
+      .write("vector3", player.position)
+      .write("quaternion", player.rotation)
       .sendToAllClientsExcept([player.socket]);
-    
+
     this.emit("playerJoin", player);
   }
 }
