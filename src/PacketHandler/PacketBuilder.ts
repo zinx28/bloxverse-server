@@ -45,23 +45,26 @@ export default class PacketBuilder {
   }
 
   build(): Buffer {
-    return Buffer.concat(this.parts); 
+    var Packet = Buffer.concat(this.parts);
+    const lengthBuffer = Buffer.alloc(4);
+    lengthBuffer.writeUInt32BE(Packet.length, 0);
+    return Buffer.concat([lengthBuffer, Packet]);
   }
 
-  sendToClient(client: ClientSocket){
-    if(!client.destroyed && !client.closed) {
-        console.log("sending packet to user")
-        client.write(this.build())
+  sendToClient(client: ClientSocket) {
+    if (!client.destroyed && !client.closed) {
+      console.log("sending packet to user");
+      client.write(this.build());
     }
   }
 
-  sendToAllClients(){
+  sendToAllClients() {
     var built = this.build();
     GameInstance.players.forEach((player) => {
-    if(!player.socket.destroyed && !player.socket.closed) {
-        console.log(`Sending Packet To ${player.displayName}`)
-        player.socket.write(built)
-    }
-  });
+      if (!player.socket.destroyed && !player.socket.closed) {
+        console.log(`Sending Packet To ${player.displayName}`);
+        player.socket.write(built);
+      }
+    });
   }
 }
