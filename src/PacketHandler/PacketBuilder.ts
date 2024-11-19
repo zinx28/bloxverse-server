@@ -1,4 +1,4 @@
-import { ClientSocket } from "..";
+import { ClientSocket, GameInstance } from "..";
 
 export default class PacketBuilder {
   private parts: Buffer[] = [];
@@ -53,5 +53,15 @@ export default class PacketBuilder {
         console.log("sending packet to user")
         client.write(this.build())
     }
+  }
+
+  sendToAllClients(){
+    var built = this.build();
+    GameInstance.players.forEach((player) => {
+    if(!player.socket.destroyed && !player.socket.closed) {
+        console.log(`Sending Packet To ${player.displayName}`)
+        player.socket.write(built)
+    }
+  });
   }
 }

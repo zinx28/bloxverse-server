@@ -74,8 +74,19 @@ export class Game extends EventEmitter {
     .write("int", player.id)
     .write("string", player.displayName)
     .write("int", this.world.blocks.length)
-    
     .sendToClient(player.socket);
+
+    // Spawn Player (ALL CLIENTS)
+    new PacketBuilder(2)
+    .write("int", player.id)
+    .write("float", player.position.x)
+    .write("float", player.position.y)
+    .write("float", player.position.z)
+    .write("float", player.rotation.x)
+    .write("float", player.rotation.y)
+    .write("float", player.rotation.z)
+    .write("float", player.rotation.w)
+    .sendToAllClients();
     
     this.emit("playerJoin", player);
   }
