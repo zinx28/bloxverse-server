@@ -19,6 +19,7 @@ export default async function loadMap(mapPath: string): Promise<void> {
 
       console.log(`Loaded Map with ${GameInstance.world.blocks.length} blocks`);
       console.log(`Map contains ${GameInstance.world.playerSpawn.length} spawns`);
+      GameInstance.emit("MapLoaded", GameInstance.world);
       return Promise.resolve();
     }
    
