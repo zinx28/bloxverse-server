@@ -2,7 +2,9 @@ import { Socket } from "net";
 import { EventEmitter } from "stream";
 import { Vector3 } from "./Unity/Vector3";
 import { Quaternion } from "./Unity/Quaternion";
-import { ClientSocket } from "..";
+import { ClientSocket, GameInstance } from "..";
+import CameraController from "./CameraController";
+import PacketBuilder from "../PacketHandler/PacketBuilder";
 
 export default class PlayerManager extends EventEmitter {
     id: string; // Player ID
@@ -11,6 +13,7 @@ export default class PlayerManager extends EventEmitter {
     rotation: Quaternion;
     health: number;
     socket: ClientSocket;
+    cameracontroller: CameraController;
     isActive: boolean;
 
     constructor(socket: ClientSocket)
@@ -24,7 +27,27 @@ export default class PlayerManager extends EventEmitter {
         // camera
         this.health = 100;
         this.socket = socket;
+        this.cameracontroller = new CameraController();
         this.isActive = true; 
         // userinterface
+    }
+
+    SpawnMap(){
+        // 3 LOAD MAP
+        for (let i = 0; i < GameInstance.world.blocks.length; i++) {
+            var brick = GameInstance.world.blocks[i];
+            console.log(brick)
+            new PacketBuilder(3)
+            .write("string", brick.type)
+            .write("vector3", brick.position)
+            .write("vector3", brick.scale)
+            .write("color", brick.color)
+            // prob more things in the future
+            .sendToClient(this.socket);
+        }
+
+        new PacketBuilder(3)
+        .write("string", "BlocksEnd")
+        .sendToClient(this.socket);
     }
 }

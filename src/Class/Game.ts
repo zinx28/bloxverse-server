@@ -69,24 +69,23 @@ export class Game extends EventEmitter {
   async NewPlayer(player: PlayerManager) {
     this.players.push(player);
 
-    // 1 is AUTH
-    const packet = new PacketBuilder(1)
-    .write("int", player.id)
-    .write("string", player.displayName)
-    .write("int", this.world.blocks.length)
-    .sendToClient(player.socket);
+    player.SpawnMap();
 
     // Spawn Player (ALL CLIENTS)
     new PacketBuilder(2)
     .write("int", player.id)
-    .write("float", player.position.x)
-    .write("float", player.position.y)
-    .write("float", player.position.z)
-    .write("float", player.rotation.x)
-    .write("float", player.rotation.y)
-    .write("float", player.rotation.z)
-    .write("float", player.rotation.w)
-    .sendToAllClients();
+    .write("vector3", player.position)
+    .write("quaternion", player.rotation)
+    // CAMERA TYPE
+    .write("string", player.cameracontroller.cameraType)
+    .sendToClient(player.socket);
+
+    // Spawn Player (ALL CLIENTS) ~ CAMERA STUFF SHOULDNT BE INCLUDED
+      new PacketBuilder(2)
+      .write("int", player.id)
+      .write("vector3", player.position)
+      .write("quaternion", player.rotation)
+      .sendToAllClientsExcept([player.socket]);
     
     this.emit("playerJoin", player);
   }

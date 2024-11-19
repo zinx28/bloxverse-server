@@ -58,6 +58,13 @@ export default async function parsePacket(
         client.IsAuth = true;
         client.User = PlayerData;
 
+            // 1 is AUTH
+        new PacketBuilder(1)
+        .write("int", client.User.id)
+        .write("string", client.User.displayName)
+        .write("int", GameInstance.world.blocks.length)
+        .sendToClient(client.User.socket);
+
         GameInstance.NewPlayer(client.User); // New Player!
       }
 

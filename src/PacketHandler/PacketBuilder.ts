@@ -40,6 +40,24 @@ export default class PacketBuilder {
         UInt16buffer.writeUInt16BE(value as number);
         this.parts.push(UInt16buffer);
         break;
+      // makes life easier
+      case "vector3":
+        this.write("float", value.x);
+        this.write("float", value.y);
+        this.write("float", value.z);
+        break;
+      case "quaternion":
+        this.write("float", value.x);
+        this.write("float", value.y);
+        this.write("float", value.z);
+        this.write("float", value.w);
+        break;
+      case "color":
+        this.write("float", value.r);
+        this.write("float", value.g);
+        this.write("float", value.b);
+        this.write("float", value.a);
+        break;
     }
     return this;
   }
@@ -58,11 +76,25 @@ export default class PacketBuilder {
     }
   }
 
+  sendToAllClientsExcept(clients: Array<ClientSocket>) {
+    var built = this.build();
+    GameInstance.players.forEach((player) => {
+      if (
+        !clients.includes(player.socket) &&
+        !player.socket.destroyed &&
+        !player.socket.closed
+      ) {
+        //console.log(`Sending Packet To ${player.displayName}`);
+        player.socket.write(built);
+      }
+    });
+  }
+
   sendToAllClients() {
     var built = this.build();
     GameInstance.players.forEach((player) => {
       if (!player.socket.destroyed && !player.socket.closed) {
-        console.log(`Sending Packet To ${player.displayName}`);
+       // console.log(`Sending Packet To ${player.displayName}`);
         player.socket.write(built);
       }
     });
