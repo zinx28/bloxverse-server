@@ -54,10 +54,10 @@ function parseMapData(rawData: string) {
     );
 
     const color = new Color(
-      parseFloat(parts[7]) || 128,
-      parseFloat(parts[8]) || 128,
-      parseFloat(parts[9]) || 128,
-      parseFloat(parts[10]) || 0
+      parseFloat(parts[7] || "128") / 255,
+      parseFloat(parts[8] || "128") / 255,
+      parseFloat(parts[9] || "128") / 255,
+      parseFloat(parts[10] || "255") / 255
     );
 
     GameInstance.world.blocks.push({ type, scale, position, color });

@@ -50,21 +50,23 @@ export default class CameraController extends EventEmitter {
   }
 
   // Camera POS AND Rotation only works if camera is set to fixed
-  setCameraPosition(newPosition: Vector3) {
-      this.camerapos = newPosition;
+  //newPosition: Vector3
+  setCameraPosition(x = 0, y = 0, z = 0) {
+      this.camerapos = new Vector3(x, y, z);
 
       new PacketBuilder(GAME_PACKET.PlayerUpdates)
       .write("string", "cameraPosition")
-      .write("vector3", newPosition)
+      .write("vector3", this.camerapos)
       .sendToClient(this.socket);
   }
 
-  setCameraRotation(newRotation: Quaternion) {
-    this.camerarot = newRotation;
+  //newRotation: Quaternion
+  setCameraRotation(x = 0, y = 0, z = 0/*, w = 0*/) {
+    this.camerarot = new Vector3(x, y, z/*, w*/);
 
     new PacketBuilder(GAME_PACKET.PlayerUpdates)
     .write("string", "cameraRotation")
-    .write("quaternion", newRotation)
+    .write("vector3", this.camerarot)
     .sendToClient(this.socket);
   }
 }
