@@ -5,6 +5,7 @@ import { Quaternion } from "./Unity/Quaternion";
 import { ClientSocket, GameInstance } from "..";
 import CameraController from "./CameraController";
 import PacketBuilder from "../PacketHandler/PacketBuilder";
+import { GAME_PACKET } from "../types/Enums";
 
 export default class PlayerManager extends EventEmitter {
     id: string; // Player ID
@@ -13,7 +14,7 @@ export default class PlayerManager extends EventEmitter {
     rotation: Quaternion;
     health: number;
     socket: ClientSocket;
-    cameracontroller: CameraController;
+    camera: CameraController;
     isActive: boolean;
 
     constructor(socket: ClientSocket)
@@ -27,7 +28,7 @@ export default class PlayerManager extends EventEmitter {
         // camera
         this.health = 100;
         this.socket = socket;
-        this.cameracontroller = new CameraController();
+        this.camera = new CameraController(socket);
         this.isActive = true; 
         // userinterface
     }
@@ -39,7 +40,7 @@ export default class PlayerManager extends EventEmitter {
         for (let i = 0; i < GameInstance.world.blocks.length; i++) {
             var brick = GameInstance.world.blocks[i];
             console.log(brick)
-            new PacketBuilder(3)
+            new PacketBuilder(GAME_PACKET.SpawnMap)
             .write("string", brick.type)
             .write("vector3", brick.position)
             .write("vector3", brick.scale)
@@ -48,7 +49,7 @@ export default class PlayerManager extends EventEmitter {
             .sendToClient(this.socket);
         }
 
-        new PacketBuilder(3)
+        new PacketBuilder(GAME_PACKET.SpawnMap)
         .write("string", "BlocksEnd")
         .sendToClient(this.socket);
     }

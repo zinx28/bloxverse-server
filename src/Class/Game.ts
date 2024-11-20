@@ -7,6 +7,7 @@ import loadMap from "../Utils/loadMap";
 import { Vector3 } from "./Unity/Vector3";
 import { Color } from "./Unity/Color";
 import PacketBuilder from "../PacketHandler/PacketBuilder";
+import { GAME_PACKET } from "../types/Enums";
 
 export interface GameBlocks {
   type: string;
@@ -70,7 +71,7 @@ export class Game extends EventEmitter {
     this.players.forEach((client) => {
       if (!client.socket.destroyed && !client.socket.closed) {
         if (player != client) {
-          new PacketBuilder(2)
+          new PacketBuilder(GAME_PACKET.SpawnPlayer)
             .write("int", client.id)
             .write("vector3", client.position)
             .write("quaternion", client.rotation)
@@ -88,16 +89,16 @@ export class Game extends EventEmitter {
     player.SpawnMap();
 
     // Spawn Player (ALL CLIENTS)
-    new PacketBuilder(2)
+    new PacketBuilder(GAME_PACKET.SpawnPlayer)
       .write("int", player.id)
       .write("vector3", player.position)
       .write("quaternion", player.rotation)
       // CAMERA TYPE
-      .write("string", player.cameracontroller.cameraType)
+      .write("string", player.camera.cameraType)
       .sendToClient(player.socket);
 
     // Spawn Player (ALL CLIENTS) ~ CAMERA STUFF SHOULDNT BE INCLUDED
-    new PacketBuilder(2)
+    new PacketBuilder(GAME_PACKET.SpawnPlayer)
       .write("int", player.id)
       //.write("string", player.displayName)
       .write("vector3", player.position)

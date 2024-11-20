@@ -2,6 +2,7 @@ import { ClientSocket, GameInstance } from "..";
 import PlayerManager from "../Class/PlayerManager";
 import { Quaternion } from "../Class/Unity/Quaternion";
 import { Vector3 } from "../Class/Unity/Vector3";
+import { GAME_PACKET, SERVER_PACKET } from "../types/Enums";
 import verifyToken from "../Utils/verifyGame";
 import PacketBuilder from "./PacketBuilder";
 
@@ -20,7 +21,7 @@ export default async function parsePacket(
   if (packetType != 1 && !client.IsAuth) return; // not auth
 
   switch (packetType) {
-    case 1: // Auth Packet
+    case SERVER_PACKET.AUTH: // Auth Packet
       const token = decompressedData.toString("utf-8", 0, nullByteIndex);
       const version = decompressedData.toString("utf-8", nullByteIndex + 1);
 
@@ -60,8 +61,7 @@ export default async function parsePacket(
         client.IsAuth = true;
         client.User = PlayerData;
 
-            // 1 is AUTH
-        new PacketBuilder(1)
+        new PacketBuilder(GAME_PACKET.Authorize)
         .write("int", client.User.id)
         .write("string", client.User.displayName)
         .write("int", GameInstance.world.blocks.length)
@@ -85,7 +85,7 @@ export default async function parsePacket(
       //.build();
 
       break;
-    case 2: // Update Player Pos To Everyone
+    case SERVER_PACKET.UpdatePOS: // Update Player Pos To Everyone
         const posX = decompressedData.readFloatLE(0);
         const posY = decompressedData.readFloatLE(4);
         const posZ = decompressedData.readFloatLE(8);
@@ -97,7 +97,7 @@ export default async function parsePacket(
         client.User.position = new Vector3(posX, posY, posZ);
         client.User.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
 
-        new PacketBuilder(4) // 4 PlayerMove
+        new PacketBuilder(GAME_PACKET.PlayerMove)
         .write("int", client.User.id)
         .write("vector3", client.User.position)
         .write("quaternion", client.User.rotation)

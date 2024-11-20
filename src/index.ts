@@ -66,27 +66,6 @@ async function clientServer(client: ClientSocket) {
     client.on("data", async (data) => {
       try {
         PacketHandler(data, client)
-        // var parsedMessage = JSON.parse(message);
-
-        //if (parsedMessage) {
-        // gotta add this to the parser
-        //if (!client.IsAuth && !GameInstance.customConfig.localhost) {
-        //if (parsedMessage.type == "authToken") {
-        //var VerifyResponse = await verifyToken(parsedMessage.data);
-        //if (VerifyResponse && !VerifyResponse.error) {
-        //   console.log("Connected user display " + VerifyResponse.displayName);
-        //}
-        // verifyToken first
-
-        //} else client.destroy(); // yeah!
-        //}
-
-        //{
-        //packetId
-        //}
-
-        // TODO: Add Parser...
-        //}
       } catch (err) {
         console.log(err); // just if outof data client, modded responses
       }
