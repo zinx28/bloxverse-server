@@ -88,7 +88,7 @@ export class Game extends EventEmitter {
 
     player.SpawnMap();
 
-    // Spawn Player (ALL CLIENTS)
+    // Spawn Player (ONLY CLIENT JOINING)
     new PacketBuilder(GAME_PACKET.SpawnPlayer)
       .write("int", player.id)
       .write("vector3", player.position)
@@ -100,9 +100,9 @@ export class Game extends EventEmitter {
     // Spawn Player (ALL CLIENTS) ~ CAMERA STUFF SHOULDNT BE INCLUDED
     new PacketBuilder(GAME_PACKET.SpawnPlayer)
       .write("int", player.id)
-      //.write("string", player.displayName)
       .write("vector3", player.position)
       .write("quaternion", player.rotation)
+      .write("string", player.displayName)
       .sendToAllClientsExcept([player.socket]);
 
     this.emit("playerJoin", player);

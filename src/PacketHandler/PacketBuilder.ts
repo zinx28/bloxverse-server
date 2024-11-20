@@ -10,8 +10,9 @@ export default class PacketBuilder {
   write(type: string, value: any): this {
     switch (type.toLowerCase()) {
       case "string":
-        console.log("Sending string:", value);
-        const stringBuffer = Buffer.from(value as string, "utf-8");
+        var ValueString = value.toString()
+        console.log("Sending string:", ValueString);
+        const stringBuffer = Buffer.from(ValueString, "utf-8");
         console.log("String Buffer:", stringBuffer);
         console.log("String Length:", stringBuffer.length);
         this.write("uint16", stringBuffer.length);

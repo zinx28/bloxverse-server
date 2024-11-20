@@ -20,7 +20,7 @@ export default class PlayerManager extends EventEmitter {
     constructor(socket: ClientSocket)
     {
         super()
-
+        
         this.id = null!;
         this.displayName = null!;
         this.position = new Vector3(0, 1, 0);
