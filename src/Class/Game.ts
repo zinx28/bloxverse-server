@@ -73,8 +73,8 @@ export class Game extends EventEmitter {
         if (player != client) {
           new PacketBuilder(GAME_PACKET.SpawnPlayer)
             .write("int", client.id)
-            .write("vector3", client.position)
-            .write("quaternion", client.rotation)
+            .write("vector3", client.character.position)
+            .write("quaternion", client.character.rotation)
             .sendToClient(player.socket);
         }
       }
@@ -91,8 +91,8 @@ export class Game extends EventEmitter {
     // Spawn Player (ONLY CLIENT JOINING)
     new PacketBuilder(GAME_PACKET.SpawnPlayer)
       .write("int", player.id)
-      .write("vector3", player.position)
-      .write("quaternion", player.rotation)
+      .write("vector3", player.character.position)
+      .write("quaternion", player.character.rotation)
       // CAMERA TYPE
       .write("string", player.camera.cameraType)
       .sendToClient(player.socket);
@@ -100,8 +100,8 @@ export class Game extends EventEmitter {
     // Spawn Player (ALL CLIENTS) ~ CAMERA STUFF SHOULDNT BE INCLUDED
     new PacketBuilder(GAME_PACKET.SpawnPlayer)
       .write("int", player.id)
-      .write("vector3", player.position)
-      .write("quaternion", player.rotation)
+      .write("vector3", player.character.position)
+      .write("quaternion", player.character.rotation)
       .write("string", player.displayName)
       .sendToAllClientsExcept([player.socket]);
 

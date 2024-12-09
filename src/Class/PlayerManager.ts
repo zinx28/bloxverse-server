@@ -6,15 +6,15 @@ import { ClientSocket, GameInstance } from "..";
 import CameraController from "./CameraController";
 import PacketBuilder from "../PacketHandler/PacketBuilder";
 import { GAME_PACKET } from "../types/Enums";
+import CharacterController from "./CharacterController";
 
 export default class PlayerManager extends EventEmitter {
     id: string; // Player ID
     displayName: string; // Player Name
-    position: Vector3;
-    rotation: Quaternion;
     health: number;
     socket: ClientSocket;
     camera: CameraController;
+    character: CharacterController;
     isActive: boolean;
 
     constructor(socket: ClientSocket)
@@ -23,14 +23,14 @@ export default class PlayerManager extends EventEmitter {
         
         this.id = null!;
         this.displayName = null!;
-        this.position = new Vector3(0, 1, 0);
-        this.rotation = new Quaternion(0, 0, 0, 0);
+      
         // camera
         this.health = 100;
         this.socket = socket;
         this.camera = new CameraController(socket);
         this.isActive = true; 
         // userinterface
+        this.character = new CharacterController(socket);
     }
 
 

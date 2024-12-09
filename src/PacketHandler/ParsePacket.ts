@@ -94,13 +94,13 @@ export default async function parsePacket(
         const rotZ = decompressedData.readFloatLE(20);
         const rotW = decompressedData.readFloatLE(24);
 
-        client.User.position = new Vector3(posX, posY, posZ);
-        client.User.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+        client.User.character.position = new Vector3(posX, posY, posZ);
+        client.User.character.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
 
         new PacketBuilder(GAME_PACKET.PlayerMove)
         .write("int", client.User.id)
-        .write("vector3", client.User.position)
-        .write("quaternion", client.User.rotation)
+        .write("vector3", client.User.character.position)
+        .write("quaternion", client.User.character.rotation)
         .sendToAllClientsExcept([client.User.socket]);
       break;
     default:
