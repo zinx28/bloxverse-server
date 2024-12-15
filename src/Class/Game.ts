@@ -75,6 +75,8 @@ export class Game extends EventEmitter {
             .write("int", client.id)
             .write("vector3", client.character.position)
             .write("quaternion", client.character.rotation)
+            .write("string", JSON.stringify(client.character.equippedItems))
+            .write("string", client.displayName)
             .sendToClient(player.socket);
         }
       }
@@ -82,17 +84,41 @@ export class Game extends EventEmitter {
   }
 
   async NewPlayer(player: PlayerManager) {
+    // Need to see if this player is already in the game if so kick the current user
+    // if not
+    const existingSession = this.players.find((e) => e.id == player.id);
+    if (existingSession) {
+      if (existingSession.socket && !existingSession.socket.destroyed) {
+        console.log("Someone joind the server on a different device");
+        new PacketBuilder(GAME_PACKET.Kick)
+          .write("string", "Someone has joined on a different device")
+          .sendToClient(existingSession.socket);
+
+        existingSession.socket.destroy();
+        // disconnect user
+      }
+
+      // remove it from the players array
+      const index = this.players.indexOf(existingSession);
+      if (index !== -1) {
+        this.players.splice(index, 1);
+      }
+    }
+
+    // add the new player!
     this.players.push(player);
 
     this.OtherClients(player); // LOAD OTHER PLAYERS ON OTHER SCREENS
 
     player.SpawnMap();
 
+    console.log("E " + player.character.equippedItems);
     // Spawn Player (ONLY CLIENT JOINING)
     new PacketBuilder(GAME_PACKET.SpawnPlayer)
       .write("int", player.id)
       .write("vector3", player.character.position)
       .write("quaternion", player.character.rotation)
+      .write("string", JSON.stringify(player.character.equippedItems))
       // CAMERA TYPE
       .write("string", player.camera.cameraType)
       .sendToClient(player.socket);
@@ -102,6 +128,7 @@ export class Game extends EventEmitter {
       .write("int", player.id)
       .write("vector3", player.character.position)
       .write("quaternion", player.character.rotation)
+      .write("string", JSON.stringify(player.character.equippedItems))
       .write("string", player.displayName)
       .sendToAllClientsExcept([player.socket]);
 

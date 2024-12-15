@@ -46,7 +46,10 @@ export default async function parsePacket(
             Object.defineProperties(PlayerData, {
               id: { value: VerifyResponse.playerID },
               displayName: { value: VerifyResponse.playerDisplayName },
+              //character: { value: VerifyResponse.character }
             });
+
+            PlayerData.character.updateEquipedItems(VerifyResponse.character ?? null)
           } else {
             return;
           }

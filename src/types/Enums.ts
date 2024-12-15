@@ -8,5 +8,6 @@ export enum GAME_PACKET {
     SpawnPlayer = 2,
     SpawnMap = 3, // WIP
     PlayerMove = 4,
-    PlayerUpdates = 5 // this is from cameraupdates and more!
+    PlayerUpdates = 5, // this is from cameraupdates and more!
+    Kick = 6
 }

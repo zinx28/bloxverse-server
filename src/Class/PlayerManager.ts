@@ -33,6 +33,12 @@ export default class PlayerManager extends EventEmitter {
         this.character = new CharacterController(socket);
     }
 
+    kick(message: string) {
+        new PacketBuilder(GAME_PACKET.Kick)
+        .write("string", message)
+        .sendToClient(this.socket);
+    }
+
 
 
     SpawnMap(){

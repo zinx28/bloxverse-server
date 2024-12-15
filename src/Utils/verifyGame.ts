@@ -2,12 +2,9 @@ import axios from "axios";
 import GameInstance from "../Class/Game";
 import { ClientSocket } from "..";
 import PlayerManager from "../Class/PlayerManager";
+import { UserData } from "../types/UserData";
 
 // Temp data
-export interface UserData {
-  playerID: string;
-  playerDisplayName: string;
-}
 
 export default async function verifyToken(
   token: string,
@@ -40,6 +37,7 @@ export default async function verifyToken(
       const userData: Partial<UserData> = {
         playerID: Json.userId,
         playerDisplayName: Json.displayName,
+        character: Json.character
       };
 
       return userData;
