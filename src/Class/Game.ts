@@ -112,6 +112,17 @@ export class Game extends EventEmitter {
 
     player.SpawnMap();
 
+    // find a spawn point for the player to pawn at
+    const RandomSpawn = this.world.playerSpawn[
+      Math.floor(Math.random() * this.world.playerSpawn.length)
+    ];
+
+    if(RandomSpawn) {
+      const TempPos = { ...RandomSpawn.position }
+      TempPos.y =+ 3;
+      player.character.position = TempPos;
+    }
+
     console.log("E " + player.character.equippedItems);
     // Spawn Player (ONLY CLIENT JOINING)
     new PacketBuilder(GAME_PACKET.SpawnPlayer)
