@@ -3,10 +3,18 @@
   "version": "1.0.0",
   "main": "./dist/src/index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
   },
-  "author": "",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "author": "zinx",
   "license": "ISC",
+  "type": "module",
+  "types": "./dist/index.d.ts",
   "description": "",
   "devDependencies": {
     "@types/node": "^22.9.0",
