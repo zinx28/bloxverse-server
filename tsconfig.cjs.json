@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/ems",
-    "module": "ESNext",
+    "outDir": "./dist/cjs",
+    "module": "CommonJS",
     "target": "esnext",
     "declaration": true,
     "declarationDir": "dist/types",

@@ -1,9 +1,9 @@
 {
   "name": "bloxverse-server",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "main": "./dist/src/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.json && tsc -p tsconfig.cjs.json",
     "prepublishOnly": "npm run build"
   },
   "files": [
@@ -11,10 +11,14 @@
     "README.md",
     "LICENSE"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",  
+      "require": "./dist/cjs/index.js"
+    }
+  },
   "author": "zinx",
   "license": "ISC",
-  "type": "module",
-  "types": "./dist/index.d.ts",
   "description": "",
   "devDependencies": {
     "@types/node": "^22.9.0",
