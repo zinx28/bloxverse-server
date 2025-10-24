@@ -8,6 +8,7 @@ import { Vector3 } from "./Unity/Vector3";
 import { Color } from "./Unity/Color";
 import PacketBuilder from "../PacketHandler/PacketBuilder";
 import { GAME_PACKET } from "../types/Enums";
+import { SafeEventEmitter } from "../Utils/safeEmit";
 
 export interface GameBlocks {
   type: string;
@@ -26,7 +27,7 @@ export interface ServerConfig {
   ServerApi: string;
 }
 
-export class Game extends EventEmitter {
+export class Game extends SafeEventEmitter  {
   players: Array<PlayerManager>;
   world: GameWorld;
   serverSettings: ServerConfig;

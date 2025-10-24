@@ -7,8 +7,9 @@ import CameraController from "./CameraController";
 import PacketBuilder from "../PacketHandler/PacketBuilder";
 import { GAME_PACKET } from "../types/Enums";
 import CharacterController from "./CharacterController";
+import { SafeEventEmitter } from "../Utils/safeEmit";
 
-export default class PlayerManager extends EventEmitter {
+export default class PlayerManager extends SafeEventEmitter {
     id: string; // Player ID
     displayName: string; // Player Name
     health: number;

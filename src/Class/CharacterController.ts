@@ -4,8 +4,9 @@ import { Vector3 } from "./Unity/Vector3";
 import { Quaternion } from "./Unity/Quaternion";
 import { Color } from "./Unity/Color";
 import { UserData } from "../types/UserData";
+import { SafeEventEmitter } from "../Utils/safeEmit";
 
-export default class CharacterController extends EventEmitter {
+export default class CharacterController extends SafeEventEmitter {
   socket: ClientSocket;
   position: Vector3;
   rotation: Quaternion;

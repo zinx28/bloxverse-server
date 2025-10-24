@@ -1,6 +1,7 @@
 import { ClientSocket } from "..";
 import PacketBuilder from "../PacketHandler/PacketBuilder";
 import { GAME_PACKET } from "../types/Enums";
+import { SafeEventEmitter } from "../Utils/safeEmit";
 import { Quaternion } from "./Unity/Quaternion";
 import { Vector3 } from "./Unity/Vector3";
 import { EventEmitter } from "stream";
@@ -11,7 +12,7 @@ export enum CameraTypes {
   firstperson = "FirstPerson",
 }
 
-export default class CameraController extends EventEmitter {
+export default class CameraController extends SafeEventEmitter {
   camerapos: Vector3;
   camerarot: Vector3;
   cameraType: string;
